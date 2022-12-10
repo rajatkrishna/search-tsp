@@ -71,15 +71,6 @@ class SearchState(State):
             visited.append(self.startCity)
             return SearchState(visited, []), self.cities.distanceBetween(self.currentCity, self.startCity)
 
-    def reward(self):
-        totalDist = 0
-        for i in range(len(self.visitedCities) - 1):
-            curr = self.visitedCities[i]
-            nxt = self.visitedCities[i + 1]
-            totalDist += self.cities.distanceBetween(curr, nxt)
-
-        return 1/totalDist
-
     def __str__(self):
         return "Current city: " + str(self.currentCity) + "\nVisited cities: "\
              + str(self.visitedCities) + "\nPending cities: " + str(self.pendingCities)
