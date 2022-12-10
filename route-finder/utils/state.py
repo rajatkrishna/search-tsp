@@ -1,4 +1,5 @@
 from utils.cities import Cities
+from random import choice
 
 class State:
 
@@ -8,7 +9,7 @@ class State:
     def nextStates(self):
         pass
 
-class UcsState(State):
+class SearchState(State):
 
     def __init__(self, visitedCities : list, pendingCities : list):
         self.visitedCities = visitedCities
@@ -41,17 +42,43 @@ class UcsState(State):
                 pending = self.pendingCities.copy()
                 visited.append(city)
                 pending.remove(city)
-                nextState = UcsState(visited, \
+                nextState = SearchState(visited, \
                     pending)
                 stepCost = self.cities.distanceBetween(self.currentCity, city)
 
                 nextStates.append([nextState, city, stepCost])
         else:
             self.visitedCities.append(self.startCity)
-            nextStates.append([UcsState(self.visitedCities, []),\
+            nextStates.append([SearchState(self.visitedCities, []),\
                  self.startCity, self.cities.distanceBetween(self.currentCity, self.startCity)])
 
         return nextStates
+
+    def findRandomChild(self):
+        if self.isGoalState():
+            return None
+        elif self.pendingCities:
+            visited = self.visitedCities.copy()
+            pending = self.pendingCities.copy()
+            city = choice(self.pendingCities)
+            visited.append(city)
+            pending.remove(city)
+            stepCost = self.cities.distanceBetween(self.currentCity, city)
+            return SearchState(visited, \
+                    pending), stepCost
+        else:
+            visited = self.visitedCities.copy()
+            visited.append(self.startCity)
+            return SearchState(visited, []), self.cities.distanceBetween(self.currentCity, self.startCity)
+
+    def reward(self):
+        totalDist = 0
+        for i in range(len(self.visitedCities) - 1):
+            curr = self.visitedCities[i]
+            nxt = self.visitedCities[i + 1]
+            totalDist += self.cities.distanceBetween(curr, nxt)
+
+        return 1/totalDist
 
     def __str__(self):
         return "Current city: " + str(self.currentCity) + "\nVisited cities: "\
