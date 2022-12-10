@@ -1,7 +1,7 @@
 
 from heapdict import heapdict   
 from utils.state import State
-from node import Node
+from utils.node import Node
 from utils.stats import Stats
 from collections import defaultdict
 from math import log, sqrt
@@ -69,17 +69,14 @@ class MCTS(Search):
     def findPath(self, startState: State):
         node = Node(startState, [startState.currentCity], 0)
 
-        i = 0
         self.logger.log("Starting at city: ", startState.currentCity)
-        while True:
-            self.logger.log("Performing rollouts for iteration: ", i)
 
+        while True:
             for _ in range(50):
-                self.do_rollout(node)
+                self.doRollout(node)
 
             node = self.choose(node)
 
-            i += 1
             if node.state.isGoalState():
                 self.stats.nodeCount = Node.counter
                 self.stats.endTime()
@@ -88,12 +85,16 @@ class MCTS(Search):
 
     def choose(self, node):
         if node.state.isGoalState():
+
             self.logger.log("Attempting to choose on a terminal state, returning None")
+
             return None
 
         if node not in self.children:
             child = node.state.findRandomChild()
+
             self.logger.log("Attempting to choose on an unexplored state, returning random next city: ", child[0].currentCity)
+
             return Node(child[0], node.getDirections() + [child[0].currentCity], node.getCost() + child[1])
 
         def score(node):
@@ -107,7 +108,7 @@ class MCTS(Search):
         
         return maxNode
 
-    def do_rollout(self, node):
+    def doRollout(self, node):
         self.logger.log("Reward before rollout: ", self.rewards[node])
         self.logger.log("Count before rollout: ", self.counts[node])
 
@@ -132,9 +133,9 @@ class MCTS(Search):
                 path.append(unexploredStates.pop())
                 return path
 
-            node = self.uct_select(node)
+            node = self.uctSelect(node)
 
-    def uct_select(self, node):
+    def uctSelect(self, node):
 
         assert all(n in self.children for n in self.children[node])
 
@@ -166,5 +167,3 @@ class MCTS(Search):
         for node in reversed(path):
             self.counts[node] += 1
             self.rewards[node] += reward
-
-            
