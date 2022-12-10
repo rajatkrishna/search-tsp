@@ -1,12 +1,13 @@
 from utils.cities import Cities
-from utils.state import UcsState
-from uniform_cost_search import UniformCostSearch
+from utils.state import SearchState
+from search import UniformCostSearch, MCTS
 import sys, getopt
 
 if (__name__ == "__main__"):
     searchMethod = 'UniformCostSearch'
+    logEnable = False
     try:
-        opts, args = getopt.getopt(sys.argv[1:],"s:",["search="])
+        opts, args = getopt.getopt(sys.argv[1:],"ls:",["search=", "log"])
     except getopt.GetoptError:
         print("route_finder.py -s <searchmethod>")
         sys.exit(2)
@@ -15,12 +16,16 @@ if (__name__ == "__main__"):
         if opt == '-s':
             if arg == 'ucs':
                 searchMethod = 'UniformCostSearch'
+            elif arg == 'mcts':
+                searchMethod = 'MCTS'
+        elif opt == '--log' or opt == '-l':
+            logEnable = True
 
-    search = globals()[searchMethod]()
+    search = globals()[searchMethod](logEnable)
     cities = Cities().getCities()
     keys = list(cities.keys())
-    startState = UcsState([keys[0]], [city for city in cities.keys()\
+    startState = SearchState([keys[0]], [city for city in cities.keys()\
          if city != keys[0]])
     _, stats = search.findPath(startState)
-    print("Time taken: " + str(stats.totalTime) + "\nTotal cost: " + str(stats.totalCost)\
-        + "\nNodes expanded: " + str(stats.nodeCount))
+
+    print(stats.toPrettyString())
