@@ -74,7 +74,7 @@ class MCTS(Search):
         self.logger.log("Starting city: ", startState.currentCity)
 
         while True:
-            for _ in range(50):
+            for _ in range(500):
                 self.doRollout(node)
 
             node = self.choose(node)
