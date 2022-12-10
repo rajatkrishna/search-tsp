@@ -58,11 +58,13 @@ class MCTS(Search):
     Implementation of Monte-Carlo Tree Search algorithm.
     """
 
-    def __init__(self, logEnable = False, expWeight = 1):
+    def __init__(self, logEnable = False, expWeight = 1.1, rewardWeight = 1.5):
         self.rewards = defaultdict(int)
         self.counts = defaultdict(int)
         self.children = dict()
         self.expWeight = expWeight
+        self.rewardWeight = rewardWeight
+        self.leastCost = float("inf")
         self.logger = Logger(logEnable)
         self.stats = Stats()
         
@@ -103,7 +105,6 @@ class MCTS(Search):
             return self.rewards[node] / self.counts[node]
 
         maxNode = max(self.children[node], key=score)
-        
         self.logger.log("City ", maxNode.getCurrentState().currentCity, " has maximum score:", score(maxNode))
         
         return maxNode
@@ -156,8 +157,7 @@ class MCTS(Search):
     def simulate(self, node):
         while True:
             if node.state.isGoalState():
-                reward = 10/node.getCost()
-                return reward
+                return self.getSimpleReward(node)
 
             child = node.state.findRandomChild()
             stepCost = child[1]
@@ -167,3 +167,28 @@ class MCTS(Search):
         for node in reversed(path):
             self.counts[node] += 1
             self.rewards[node] += reward
+
+    def getSimpleReward(self, node : Node):
+        if node.getCost() > self.leastCost:
+            return 0
+        else:
+            reward = 0 if self.leastCost == float("inf") else 1
+
+            self.leastCost = node.getCost()
+
+        return reward
+
+    def getRewardUsingInnerFunction(self, node : Node):
+        """
+        Uses the reward function described in: 
+        https://reader.elsevier.com/reader/sd/pii/S2185556020300286?token=4FB07183B2173A075B2DDEF1C64FED0675A48515C093C7E9E04909DA12CBEE97876504B34336A9319116F7ED6E9B8672&originRegion=us-east-1&originCreation=20221210032942
+        """
+
+        if node.getCost() < self.leastCost:
+            self.leastCost = node.getCost()
+            return 1
+        elif (self.leastCost <= node.getCost()) and (self.leastCost * self.rewardWeight) <= node.getCost():
+            score = ((self.rewardWeight * self.leastCost / node.getCost()) - 1)**2
+            return score
+        else:
+            return 0
