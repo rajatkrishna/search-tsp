@@ -71,6 +71,16 @@ class SearchState(State):
             visited.append(self.startCity)
             return SearchState(visited, []), self.cities.distanceBetween(self.currentCity, self.startCity)
 
+    def __eq__(self, other):
+        if not isinstance(other, State):
+            return NotImplemented
+
+        return self.visitedCities == other.visitedCities\
+             and self.pendingCities == other.pendingCities\
+             and self.currentCity == other.currentCity
+
+    def __hash__(self):
+        return hash(self.__str__())
+
     def __str__(self):
-        return "Current city: " + str(self.currentCity) + "\nVisited cities: "\
-             + str(self.visitedCities) + "\nPending cities: " + str(self.pendingCities)
+        return str(self.currentCity) + str(self.visitedCities) + str(self.pendingCities)
