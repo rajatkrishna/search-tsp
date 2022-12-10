@@ -71,7 +71,7 @@ class MCTS(Search):
     def findPath(self, startState: State):
         node = Node(startState, [startState.currentCity], 0)
 
-        self.logger.log("Starting at city: ", startState.currentCity)
+        self.logger.log("Starting city: ", startState.currentCity)
 
         while True:
             for _ in range(50):
