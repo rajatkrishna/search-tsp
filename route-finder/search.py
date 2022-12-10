@@ -80,7 +80,7 @@ class MCTS(Search):
             node = self.choose(node)
 
             if node.state.isGoalState():
-                self.stats.nodeCount = Node.counter
+                self.stats.nodeCount = len(self.children.keys())
                 self.stats.endTime()
                 self.stats.totalCost = node.getCost()
                 return node.state.visitedCities, self.stats
