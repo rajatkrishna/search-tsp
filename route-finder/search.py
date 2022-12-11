@@ -58,12 +58,13 @@ class MCTS(Search):
     Implementation of Monte-Carlo Tree Search algorithm.
     """
 
-    def __init__(self, logEnable = False, expWeight = 1.1, rewardWeight = 1.5):
+    def __init__(self, logEnable = False, expWeight = 1.1, rewardWeight = 1.5, noIterationsRollout = 500):
         self.rewards = defaultdict(int)
         self.counts = defaultdict(int)
         self.children = dict()
         self.expWeight = expWeight
         self.rewardWeight = rewardWeight
+        self.noIterationsRollout = noIterationsRollout
         self.leastCost = float("inf")
         self.logger = Logger(logEnable)
         self.stats = Stats()
@@ -74,7 +75,7 @@ class MCTS(Search):
         self.logger.log("Starting city: ", startState.currentCity)
 
         while True:
-            for _ in range(500):
+            for _ in range(self.noIterationsRollout):
                 self.doRollout(node)
 
             node = self.choose(node)
