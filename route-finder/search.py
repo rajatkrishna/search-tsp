@@ -6,6 +6,7 @@ from utils.stats import Stats
 from collections import defaultdict
 from math import log, sqrt
 from utils.logger import Logger
+from utils.graphGenerator import GraphGenerator
 
 class Search:
     
@@ -18,9 +19,10 @@ class UniformCostSearch(Search):
     as priority queue.
     """
 
-    def __init__(self, logEnable = False):
+    def __init__(self, logEnable = False, printGraph = False):
         self.stats = Stats()
         self.logger = Logger(logEnable)
+        self.graphGenerator = GraphGenerator(printGraph, "UCS Search")
 
     def findPath(self, startState : State):
         explored = []
@@ -32,6 +34,7 @@ class UniformCostSearch(Search):
             return [], self.stats
         
         node = Node(startState, [startState.currentCity], 0)
+        self.graphGenerator.addNode(node)
         frontier[node] = 0
 
         while frontier:
@@ -45,20 +48,24 @@ class UniformCostSearch(Search):
                     self.stats.nodeCount = Node.counter
                     self.stats.endTime()
                     self.stats.totalCost = currentNode.getCost()
+                    self.graphGenerator.generate()
                     return currentNode.getDirections(), self.stats
 
                 for (nextState, action, stepCost) in currentState.nextStates():
                     nextDirections = currentNode.getDirections() + [action]
                     # total cost upto this state
                     nextCost = currentNode.getCost() + stepCost
-                    frontier[Node(nextState, nextDirections, nextCost)] = nextCost
+                    node = Node(nextState, nextDirections, nextCost)
+                    self.graphGenerator.addNode(node, currentNode)
+                    frontier[node] = nextCost
     
 class MCTS(Search):
     """
     Implementation of Monte-Carlo Tree Search algorithm.
     """
 
-    def __init__(self, logEnable = False, expWeight = 1.1, rewardWeight = 1.5, noIterationsRollout = 500):
+    def __init__(self, logEnable = False, expWeight = 1.1, rewardWeight = 1.5, noIterationsRollout = 500,
+                printGraph = False):
         self.rewards = defaultdict(int)
         self.counts = defaultdict(int)
         self.children = dict()
@@ -68,9 +75,11 @@ class MCTS(Search):
         self.leastCost = float("inf")
         self.logger = Logger(logEnable)
         self.stats = Stats()
+        self.graphGenerator = GraphGenerator(printGraph, "MCTS Tree Search")
         
     def findPath(self, startState: State):
         node = Node(startState, [startState.currentCity], 0)
+        self.graphGenerator.addNode(node)
 
         self.logger.log("Starting city: ", startState.currentCity)
 
@@ -84,6 +93,7 @@ class MCTS(Search):
                 self.stats.nodeCount = len(self.children.keys())
                 self.stats.endTime()
                 self.stats.totalCost = node.getCost()
+                self.graphGenerator.generate()
                 return node.state.visitedCities, self.stats
 
     def choose(self, node):
@@ -98,7 +108,10 @@ class MCTS(Search):
 
             self.logger.log("Attempting to choose on an unexplored state, returning random next city: ", child[0].currentCity)
 
-            return Node(child[0], node.getDirections() + [child[0].currentCity], node.getCost() + child[1])
+            newNode = Node(child[0], node.getDirections() + [child[0].currentCity], node.getCost() + child[1])
+            self.graphGenerator.addNode(newNode, node)
+
+            return newNode
 
         def score(node):
             if (self.counts[node] == 0):
@@ -108,6 +121,8 @@ class MCTS(Search):
         maxNode = max(self.children[node], key=score)
         self.logger.log("City ", maxNode.getCurrentState().currentCity, " has maximum score:", score(maxNode))
         
+        self.graphGenerator.addNode(maxNode, node)
+
         return maxNode
 
     def doRollout(self, node):
@@ -154,6 +169,9 @@ class MCTS(Search):
         if node in self.children:
             return  
         self.children[node] = [Node(s[0], node.getDirections() + [s[1]], node.getCost() + s[2]) for s in node.state.nextStates()]
+
+        for childNode in self.children[node]:
+            self.graphGenerator.addNode(childNode, node)
 
     def simulate(self, node):
         while True:

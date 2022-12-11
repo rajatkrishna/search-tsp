@@ -1,6 +1,7 @@
 ---
-logEnable: true
+logEnable: false
+printGraph: true
 mcts:
   explorationWeight: 1.1
   rewardWeight: 1.5
-  noIterationsRollout: 500
+  noIterationsRollout: 50

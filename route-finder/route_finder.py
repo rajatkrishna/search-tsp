@@ -21,8 +21,10 @@ if (__name__ == "__main__"):
     config = readConfig(pathToConfig)
     
     logEnable = config["logEnable"] if "logEnable" in config else False
+    printGraph = config["printGraph"] if "printGraph" in config else False
     searchArgs = {
-        "logEnable":logEnable
+        "logEnable": logEnable,
+        "printGraph": printGraph
         }
 
     # read command line args
