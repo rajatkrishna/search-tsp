@@ -18,7 +18,7 @@ class SearchState(State):
         
         if visitedCities:  
             self.startCity = visitedCities[0]
-            self.currentCity = visitedCities[len(visitedCities) - 1]
+            self.currentCity = visitedCities[-1]
 
     def isGoalState(self):
         """
