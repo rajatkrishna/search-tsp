@@ -18,7 +18,7 @@ class UniformCostSearch(Search):
     as priority queue.
     """
 
-    def __init__(self, logEnable):
+    def __init__(self, logEnable = False):
         self.stats = Stats()
         self.logger = Logger(logEnable)
 
