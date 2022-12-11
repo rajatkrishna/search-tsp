@@ -1,0 +1,6 @@
+---
+logEnable: true
+mcts:
+  explorationWeight: 1.1
+  rewardWeight: 1.5
+  noIterationsRollout: 500
