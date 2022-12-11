@@ -84,6 +84,8 @@ class GraphGenerator():
               hovermode = 'closest',
               plot_bgcolor = 'rgb(230,230,230)'
               )
+        self.figure.update_xaxes(visible = False)
+        self.figure.update_yaxes(visible = False)
 
         self.figure.write_html('graph.html', auto_open=True)
 
