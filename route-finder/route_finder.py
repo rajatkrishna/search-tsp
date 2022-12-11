@@ -60,6 +60,13 @@ if (__name__ == "__main__"):
     startState = SearchState([keys[0]], [city for city in cities.keys()\
          if city != keys[0]])
 
-    _, stats = search.findPath(startState)
+    path, stats = search.findPath(startState)
 
-    print(stats.toPrettyString())
+    print("Discovered Path:")
+    for i, state in enumerate(path):
+        if i == len(path) - 1:
+            print(state)
+        else:
+            print(state, "-->", end=" ")
+
+    print("\n" + stats.toPrettyString())
