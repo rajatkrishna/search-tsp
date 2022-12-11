@@ -48,8 +48,9 @@ class SearchState(State):
 
                 nextStates.append([nextState, city, stepCost])
         else:
-            self.visitedCities.append(self.startCity)
-            nextStates.append([SearchState(self.visitedCities, []),\
+            visited = self.visitedCities.copy()
+            visited.append(self.startCity)
+            nextStates.append([SearchState(visited, []),\
                  self.startCity, self.cities.distanceBetween(self.currentCity, self.startCity)])
 
         return nextStates
