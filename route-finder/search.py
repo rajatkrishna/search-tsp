@@ -6,7 +6,8 @@ from utils.stats import Stats
 from collections import defaultdict
 from math import log, sqrt
 from utils.logger import Logger
-from utils.graphGenerator import GraphGenerator
+from utils.visualization.searchTreeGenerator import SearchTreeGenerator
+from utils.visualization.visualizationHandler import VisualizationHandler
 
 class Search:
     
@@ -22,7 +23,8 @@ class UniformCostSearch(Search):
     def __init__(self, logEnable = False, printGraph = False):
         self.stats = Stats()
         self.logger = Logger(logEnable)
-        self.graphGenerator = GraphGenerator(printGraph, "UCS Search")
+        self.visualHandler = VisualizationHandler()
+        self.visualHandler.initSearchTreeGenerator("UCS Search", printGraph)
 
     def findPath(self, startState : State):
         explored = []
@@ -34,7 +36,7 @@ class UniformCostSearch(Search):
             return [], self.stats
         
         node = Node(startState, [startState.currentCity], 0)
-        self.graphGenerator.addNode(node)
+        self.visualHandler.addSearchTreeRootNode(node)
         frontier[node] = 0
 
         while frontier:
@@ -48,7 +50,7 @@ class UniformCostSearch(Search):
                     self.stats.nodeCount = Node.counter
                     self.stats.endTime()
                     self.stats.totalCost = currentNode.getCost()
-                    self.graphGenerator.generate()
+                    self.visualHandler.generateSearchTree()
                     return currentNode.getDirections(), self.stats
 
                 for (nextState, action, stepCost) in currentState.nextStates():
@@ -56,7 +58,7 @@ class UniformCostSearch(Search):
                     # total cost upto this state
                     nextCost = currentNode.getCost() + stepCost
                     node = Node(nextState, nextDirections, nextCost)
-                    self.graphGenerator.addNode(node, currentNode)
+                    self.visualHandler.addSearchTreeNode(node, currentNode)
                     frontier[node] = nextCost
     
 class MCTS(Search):
@@ -75,11 +77,12 @@ class MCTS(Search):
         self.leastCost = float("inf")
         self.logger = Logger(logEnable)
         self.stats = Stats()
-        self.graphGenerator = GraphGenerator(printGraph, "MCTS Tree Search")
+        self.visualHandler = VisualizationHandler()
+        self.visualHandler.initSearchTreeGenerator("MCTS Tree Search", printGraph)
         
     def findPath(self, startState: State):
         node = Node(startState, [startState.currentCity], 0)
-        self.graphGenerator.addNode(node)
+        self.visualHandler.addSearchTreeRootNode(node)
 
         self.logger.log("Starting city: ", startState.currentCity)
 
@@ -93,7 +96,7 @@ class MCTS(Search):
                 self.stats.nodeCount = len(self.children.keys())
                 self.stats.endTime()
                 self.stats.totalCost = node.getCost()
-                self.graphGenerator.generate()
+                self.visualHandler.generateSearchTree()
                 return node.state.visitedCities, self.stats
 
     def choose(self, node):
@@ -109,7 +112,7 @@ class MCTS(Search):
             self.logger.log("Attempting to choose on an unexplored state, returning random next city: ", child[0].currentCity)
 
             newNode = Node(child[0], node.getDirections() + [child[0].currentCity], node.getCost() + child[1])
-            self.graphGenerator.addNode(newNode, node)
+            self.visualHandler.addSearchTreeNode(newNode, node)
 
             return newNode
 
@@ -121,7 +124,7 @@ class MCTS(Search):
         maxNode = max(self.children[node], key=score)
         self.logger.log("City ", maxNode.getCurrentState().currentCity, " has maximum score:", score(maxNode))
         
-        self.graphGenerator.addNode(maxNode, node)
+        self.visualHandler.addSearchTreeNode(maxNode, node)
 
         return maxNode
 
@@ -171,7 +174,7 @@ class MCTS(Search):
         self.children[node] = [Node(s[0], node.getDirections() + [s[1]], node.getCost() + s[2]) for s in node.state.nextStates()]
 
         for childNode in self.children[node]:
-            self.graphGenerator.addNode(childNode, node)
+            self.visualHandler.addSearchTreeNode(childNode, node)
 
     def simulate(self, node):
         while True:
