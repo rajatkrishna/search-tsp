@@ -3,7 +3,7 @@ import plotly.graph_objects as go
 from igraph import Graph, EdgeSeq
 import itertools as it
 
-class GraphGenerator():
+class SearchTreeGenerator:
 
     def __init__(self, printGraph : bool, title : str):
         self.printGraph = printGraph
