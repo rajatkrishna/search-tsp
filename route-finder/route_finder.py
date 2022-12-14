@@ -31,7 +31,7 @@ if (__name__ == "__main__"):
     try:
         opts, args = getopt.getopt(sys.argv[1:],"s:",["search="])
     except getopt.GetoptError:
-        print("route_finder.py -s <searchmethod>")
+        print("invalid option\n\nusage: route_finder.py -s <searchmethod>")
         sys.exit(2)
 
     for opt, arg in opts:
@@ -51,6 +51,10 @@ if (__name__ == "__main__"):
                 searchArgs['expWeight'] = expWeight
                 searchArgs['rewardWeight'] = rewardWeight
                 searchArgs['noIterationsRollout'] = noIterationsRollout
+            else:
+                print("unrecognized search method\n\navailable search methods: ucs, mcts")
+                print("usage: route_finder.py -s <searchmethod>")
+                sys.exit(2)
 
     search = globals()[searchMethod](**searchArgs)
 
