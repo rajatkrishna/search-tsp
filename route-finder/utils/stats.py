@@ -1,4 +1,5 @@
 import time
+from datetime import timedelta
 
 class Stats:
 
@@ -11,6 +12,6 @@ class Stats:
           self.totalTime = time.perf_counter() - self.startTime
 
     def toPrettyString(self):
-        response = "Total time\tNodes expanded\tCost of route\n"
-        response += str(round(self.totalTime, 2)) + "\t\t" + str(self.nodeCount) + "\t\t" + str(self.totalCost)
+        response = "Total time(HH:MM:SS)\tNodes expanded\tCost of route\n"
+        response += str(timedelta(seconds=self.totalTime)) + "\t\t" + str(self.nodeCount) + "\t\t" + str(self.totalCost)
         return response
