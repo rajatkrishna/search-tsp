@@ -210,7 +210,7 @@ class MCTS(Search):
         if node.getCost() < self.leastCost:
             self.leastCost = node.getCost()
             return 1
-        elif (self.leastCost <= node.getCost()) and (self.leastCost * self.rewardWeight) <= node.getCost():
+        elif (self.leastCost <= node.getCost()) and (self.leastCost * self.rewardWeight) >= node.getCost():
             score = ((self.rewardWeight * self.leastCost / node.getCost()) - 1)**2
             return score
         else:
