@@ -12,7 +12,7 @@ class Cities:
         and the x,y coordinates of that city.
         """
         
-        citiesListStr = files('utils.resources').joinpath('cities.txt').read_text()
+        citiesListStr = files('resources').joinpath('cities.txt').read_text()
         entries = citiesListStr.split('\n')
         self.cities = {int(city.split(' ')[0]): (int(city.split(' ')[1]), int(city.split(' ')[2])) for city in entries}
 
