@@ -2,6 +2,7 @@ import plotly.offline as pyo
 import plotly.graph_objects as go
 from igraph import Graph, EdgeSeq
 import itertools as it
+import uuid 
 
 class SearchTreeGenerator:
 
@@ -87,7 +88,9 @@ class SearchTreeGenerator:
         self.figure.update_xaxes(visible = False)
         self.figure.update_yaxes(visible = False)
 
-        self.figure.write_html('graph.html', auto_open=True)
+        self.figure.write_html('./resources/graphs'\
+             + self.title.replace(' ', '-') + "-" + str(uuid.uuid4())[:10]\
+                  + '.html', auto_open=True)
 
     def formatHoverText(self, directions: list, cost: float):
         currentCity = directions[-1]
