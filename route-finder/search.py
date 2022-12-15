@@ -25,6 +25,7 @@ class UniformCostSearch(Search):
         self.logger = Logger(logEnable)
         self.visualHandler = VisualizationHandler()
         self.visualHandler.initSearchTreeGenerator("UCS Search", printGraph)
+        Node.counter = 0
 
     def findPath(self, startState : State):
         explored = []
