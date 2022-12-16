@@ -1,7 +1,6 @@
 <div align="center">
-  <img src="https://drive.google.com/uc?id=14obsLoVYIPi_l9rf1roEVXqmnpUPmq8u">
+  <h1>route-access</h1>
 </div>
-<hr/>
 
 [routeaccess](https://github.com/rajatkrishna/search-tsp) is a route planning application that can be used for calculating optimal routes to visit a set of locations exactly once and return to the starting location. The optimal route is defined as the route that spans the least distance. The approach used here presents the problem statement as a search problem, and applies search algorithms that can generate a reasonably optimal solution in limited time/memory constraints. To this end, this application can be also be used to study the feasibility of search algorithms in solving variations of the Travelling Salesman problem.
 
