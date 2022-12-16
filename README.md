@@ -33,7 +33,7 @@ The search tree generated can be seen in `./route-finder/resources/graphs`
 ## Search Configuration
 The config file `config/config.yml` can be used to modify program behaviour. The following settings can be configured:
 - logEnable: Enable/disable log output to the console.
-- printGraph: Generate search graph. The search tree will be generated and saved to `route-finde/graph.html`
+- printGraph: Generate search graph. The search tree will be generated and saved to `route-finder/graph.html`
 - explorationWeight: The exploration weight parameter for MCTS search.
 - rewardWeight: The reward weight for the inner function used in MCTS search. 
 - noIterationsRollout: The number of rollouts in each iteration performed by the MCTS algorithm.
