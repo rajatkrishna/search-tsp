@@ -55,6 +55,9 @@ if (__name__ == "__main__"):
                 print("unrecognized search method\n\navailable search methods: ucs, mcts")
                 print("usage: route_finder.py -s <searchmethod>")
                 sys.exit(2)
+        else:
+            print("invalid option\n\nusage: route_finder.py -s <searchmethod>")
+            sys.exit(2)
 
     search = globals()[searchMethod](**searchArgs)
 
