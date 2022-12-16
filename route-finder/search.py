@@ -25,6 +25,7 @@ class UniformCostSearch(Search):
         self.logger = Logger(logEnable)
         self.visualHandler = VisualizationHandler()
         self.visualHandler.initSearchTreeGenerator("UCS Search", printGraph)
+        self.visualHandler.initSearchStatusViewGenerator(1000000)
         Node.counter = 0
 
     def findPath(self, startState : State):
@@ -60,6 +61,7 @@ class UniformCostSearch(Search):
                     nextCost = currentNode.getCost() + stepCost
                     node = Node(nextState, nextDirections, nextCost)
                     self.visualHandler.addSearchTreeNode(node, currentNode)
+                    self.visualHandler.write(node.getDirections())
                     frontier[node] = nextCost
     
 class MCTS(Search):
@@ -80,6 +82,7 @@ class MCTS(Search):
         self.stats = Stats()
         self.visualHandler = VisualizationHandler()
         self.visualHandler.initSearchTreeGenerator("MCTS Tree Search", printGraph)
+        self.visualHandler.initSearchStatusViewGenerator(1000000)
         
     def findPath(self, startState: State):
         node = Node(startState, [startState.currentCity], 0)
@@ -135,6 +138,7 @@ class MCTS(Search):
 
         path = self.select(node)
         leaf = path[-1]
+        self.visualHandler.write(leaf.getDirections())
         self.expand(leaf)
         reward = self.simulate(leaf)
         self.backpropagate(path, reward)

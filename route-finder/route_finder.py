@@ -71,7 +71,7 @@ if (__name__ == "__main__"):
 
     path, stats = search.findPath(startState)
 
-    print("Discovered Path:")
+    print("\n\nDiscovered Path:")
     for i, state in enumerate(path):
         if i == len(path) - 1:
             print(state)
