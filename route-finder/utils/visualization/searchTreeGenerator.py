@@ -88,7 +88,7 @@ class SearchTreeGenerator:
         self.figure.update_xaxes(visible = False)
         self.figure.update_yaxes(visible = False)
 
-        self.figure.write_html('./resources/graphs'\
+        self.figure.write_html('./resources/graphs/'\
              + self.title.replace(' ', '-') + "-" + str(uuid.uuid4())[:10]\
                   + '.html', auto_open=True)
 
