@@ -1,7 +1,6 @@
 <div align="center">
-  <img src="https://drive.google.com/uc?id=14obsLoVYIPi_l9rf1roEVXqmnpUPmq8u">
+  <h1>route-access</h1>
 </div>
-<hr/>
 
 [routeaccess](https://github.com/rajatkrishna/search-tsp) is a route planning application that can be used for calculating optimal routes to visit a set of locations exactly once and return to the starting location. The optimal route is defined as the route that spans the least distance. The approach used here presents the problem statement as a search problem, and applies search algorithms that can generate a reasonably optimal solution in limited time/memory constraints. To this end, this application can be also be used to study the feasibility of search algorithms in solving variations of the Travelling Salesman problem.
 
@@ -33,7 +32,7 @@ The search tree generated can be seen in `./route-finder/resources/graphs`
 ## Search Configuration
 The config file `config/config.yml` can be used to modify program behaviour. The following settings can be configured:
 - logEnable: Enable/disable log output to the console.
-- printGraph: Generate search graph. The search tree will be generated and saved to `route-finde/graph.html`
+- printGraph: Generate search graph. The search tree will be generated and saved to `route-finder/graph.html`
 - explorationWeight: The exploration weight parameter for MCTS search.
 - rewardWeight: The reward weight for the inner function used in MCTS search. 
 - noIterationsRollout: The number of rollouts in each iteration performed by the MCTS algorithm.
